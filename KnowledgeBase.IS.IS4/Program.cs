@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 #region JWT Tokens
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 #endregion
 
 #region Add Identity to services

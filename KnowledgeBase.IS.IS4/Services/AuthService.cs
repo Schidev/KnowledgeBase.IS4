@@ -10,11 +10,13 @@ namespace KnowledgeBase.IS.IS4.Services
     {
         private readonly AuthDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-        public AuthService(AuthDbContext db, UserManager<ApplicationUser> userManager)
+        public AuthService(AuthDbContext db, UserManager<ApplicationUser> userManager, IJwtTokenGenerator jwtTokenGenerator)
         {
             _db = db;
             _userManager = userManager;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
@@ -27,6 +29,9 @@ namespace KnowledgeBase.IS.IS4.Services
                 return new LoginResponseDTO() { User = null, Token = "" };
             }
 
+            //if user was found , Generate JWT Token
+            var token = _jwtTokenGenerator.GenerateToken(user);
+
             UserDTO userDTO = new()
             {
                 Email = user.Email,
@@ -38,7 +43,7 @@ namespace KnowledgeBase.IS.IS4.Services
             LoginResponseDTO loginResponseDto = new()
             {
                 User = userDTO,
-                Token = string.Empty
+                Token = token
             };
 
             return loginResponseDto;
