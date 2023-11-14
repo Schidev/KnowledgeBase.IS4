@@ -11,12 +11,14 @@ namespace KnowledgeBase.IS.IS4.Services
         private readonly AuthDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthService(AuthDbContext db, UserManager<ApplicationUser> userManager, IJwtTokenGenerator jwtTokenGenerator)
+        public AuthService(AuthDbContext db, UserManager<ApplicationUser> userManager, IJwtTokenGenerator jwtTokenGenerator, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
             _userManager = userManager;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _roleManager = roleManager;
         }
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
@@ -86,6 +88,26 @@ namespace KnowledgeBase.IS.IS4.Services
 
             }
             return "Error Encountered.";
+        }
+
+        public async Task<bool> AssignRole(string email, string roleName)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+            {
+                //create role if it does not exist
+                _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+            }
+
+            await _userManager.AddToRoleAsync(user, roleName);
+
+            return true;
         }
     }
 }
