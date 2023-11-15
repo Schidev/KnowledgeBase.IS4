@@ -4,6 +4,6 @@ namespace KnowledgeBase.IS.IS4.Services.IServices
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(ApplicationUser applicationUser);
+        string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles);
     }
 }
