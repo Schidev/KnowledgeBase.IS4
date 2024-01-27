@@ -82,7 +82,7 @@ namespace KnowledgeBase.IS.IS4.Services
                     PhoneNumber = userToReturn.PhoneNumber
                 };
 
-                return "There are no errors occured.";
+                return String.Empty;
             }
             catch (Exception ex)
             {

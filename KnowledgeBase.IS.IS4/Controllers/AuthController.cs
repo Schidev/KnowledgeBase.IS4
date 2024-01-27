@@ -17,7 +17,7 @@ namespace KnowledgeBase.IS.IS4.Controllers
             _response = new();
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDTO model)
         {
             var errorMessage = await _authService.Register(model);
@@ -32,7 +32,7 @@ namespace KnowledgeBase.IS.IS4.Controllers
             return Ok(_response);
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO model)
         {
             var loginResponse = await _authService.Login(model);
